@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/mnt/data/projects/cpp-projects/BDEV-physics-engin/build",
+  "command": "/usr/bin/c++  -I/mnt/data/projects/cpp-projects/BDEV-physics-engin/include -I/usr/include/SDL2 -std=c++23 -o CMakeFiles/physics_engine.dir/src/Renderer.cpp.o -c /mnt/data/projects/cpp-projects/BDEV-physics-engin/src/Renderer.cpp",
+  "file": "/mnt/data/projects/cpp-projects/BDEV-physics-engin/src/Renderer.cpp",
+  "output": "CMakeFiles/physics_engine.dir/src/Renderer.cpp.o"
+},
+{
+  "directory": "/mnt/data/projects/cpp-projects/BDEV-physics-engin/build",
+  "command": "/usr/bin/c++  -I/mnt/data/projects/cpp-projects/BDEV-physics-engin/include -I/usr/include/SDL2 -std=c++23 -o CMakeFiles/physics_engine.dir/src/main.cpp.o -c /mnt/data/projects/cpp-projects/BDEV-physics-engin/src/main.cpp",
+  "file": "/mnt/data/projects/cpp-projects/BDEV-physics-engin/src/main.cpp",
+  "output": "CMakeFiles/physics_engine.dir/src/main.cpp.o"
+}
+]
