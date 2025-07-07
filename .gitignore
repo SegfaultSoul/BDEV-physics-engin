@@ -41,4 +41,4 @@
 *.dwo
 
 .cache/
-build/
+/build/
