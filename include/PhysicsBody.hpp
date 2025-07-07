@@ -1,21 +1,18 @@
 #pragma once
 
-class Vector2 {
-public:
-    float x, y;
-
-    // Constructor
-    Vector2(float x = 0.0f, float y = 0.0f);
-
-    // Operator Overloads
-    Vector2 operator+(const Vector2& rhs) const;
-    Vector2 operator-(const Vector2& rhs) const;
-    Vector2 operator*(const Vector2& rhs) const;
-    Vector2 operator/(const Vector2& rhs) const;
-    Vector2 operator+=(const Vector2& rhs);
-};
+#include "Vector2D.hpp"
 
 class PhysicsBody {
   protected:
-    
+    Vector2D position;
+    Vector2D velocity;
+    Vector2D acceleration;
+    Vector2D force;
+
+    float mass = 1.0f;
+
+    bool is_static = false;
+
+    // void apply_force(const Vector2D& force);
+    // void update(float dt);
 };
