@@ -1,3 +1,0 @@
-/mnt/data/projects/cpp-projects/BDEV-physics-engin/build/CMakeFiles/physics_engine.dir
-/mnt/data/projects/cpp-projects/BDEV-physics-engin/build/CMakeFiles/edit_cache.dir
-/mnt/data/projects/cpp-projects/BDEV-physics-engin/build/CMakeFiles/rebuild_cache.dir
