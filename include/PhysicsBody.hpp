@@ -9,7 +9,7 @@ class PhysicsBody {
     Vector2D acceleration;
     Vector2D force;
 
-    float mass = 1.0f;
+    double mass = 1.0f;
 
     bool is_static = false;
 

@@ -1,29 +1,16 @@
-#include "Renderer.hpp"
-#include "SDL_events.h"
+#include "Scene.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
 
 int main(){
-  Renderer r;
-  r.init(640, 440, "Test");
 
-  bool running = true;
-  SDL_Event event;
+  Scene s;
+  s.init(660, 440, "test");
 
-  while (running) {
-    //event handelling
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
-        running = false;
-      }
-    }
+  s.run();
 
-    r.begin_frame();
+  s.suspend();
 
-    r.end_frame();
-  } 
-
-  r.suspend();
   std::cout << "Process Terminated..." << "\n";
   return 0;
 }

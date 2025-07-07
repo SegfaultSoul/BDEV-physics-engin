@@ -31,19 +31,20 @@ void Renderer::suspend(){
 // void Renderer::run(){
 //     // }
 
-void Renderer::add_entity(Entity entity){
-  entity_list.push_back(&entity);
+void Renderer::add_entity(Entity* entity){
+  entity_list.push_back(entity);
 }
 
+//TODO: Fix
 void Renderer::render_entity(Entity entity){
-  switch (entity.visual.shape) {
-    case ShapeType::None:
-      break;
-    case ShapeType::Rectangel:
-      break;
-    case ShapeType::Circle:
-      break;
-  }
+  // switch (entity) {
+  //   case ShapeType::None:
+  //     break;
+  //   case ShapeType::Rectangel:
+  //     break;
+  //   case ShapeType::Circle:
+  //     break;
+  // }
 }
 
 void Renderer::begin_frame(){

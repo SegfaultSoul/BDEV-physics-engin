@@ -21,7 +21,7 @@ class Renderer{
     void suspend();
 
     // void run();
-    void add_entity(Entity entity); 
+    void add_entity(Entity* entity); 
     void render_entity(Entity entity);
     
     void begin_frame();
