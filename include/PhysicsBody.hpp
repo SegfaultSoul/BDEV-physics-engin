@@ -19,19 +19,19 @@ class PhysicsBody {
     // void update(float dt);
   
   public:
-    void set_position(Vector2D<double> position);
+    void set_position(const Vector2D<double>& position);
     Vector2D<double> get_position() const;
 
-    void set_size(Vector2D<double> size);
+    void set_size(const Vector2D<double>& size);
     Vector2D<double> get_size() const;
 
-    void set_velocity(Vector2D<double> velocity);
+    void set_velocity(const Vector2D<double>& velocity);
     Vector2D<double> get_velocity() const;
 
-    void set_acceleration(Vector2D<double> acceleration);
+    void set_acceleration(const Vector2D<double>& acceleration);
     Vector2D<double> get_acceleration() const;
 
-    void set_force(Vector2D<double> force);
+    void set_force(const Vector2D<double>& force);
     Vector2D<double> get_force() const;
 
     void set_mass(double mass);

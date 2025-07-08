@@ -19,7 +19,7 @@ class Scene {
     void init(int width, int height, std::string title);
     void suspend();
 
-    void add_entity(Entity entity);
+    void add_entity(Entity& entity);
     
     void run();
 };

@@ -10,7 +10,7 @@ void Scene::suspend(){
   this->renderer.suspend();
 }
 
-void Scene::add_entity(Entity entity){
+void Scene::add_entity(Entity& entity){
   this->entity_list.push_back(entity);
   this->renderer.add_entity(&entity_list.back());
 }

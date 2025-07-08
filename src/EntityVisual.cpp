@@ -3,11 +3,11 @@
 #include "Vector2D.hpp"
 
 // Setters
-void EntityVisual::set_size(Vector2D<double> size){
+void EntityVisual::set_size(const Vector2D<double>& size){
   this->size = size;
 }
 
-void EntityVisual::set_scale(Vector2D<double> scale){
+void EntityVisual::set_scale(const Vector2D<double>& scale){
   this->scale = scale;
 }
 
