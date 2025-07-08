@@ -6,9 +6,7 @@
 int main(){
   
   Entity e;
-  e.body.set_position(Vector2D<double>(25, 25));
-  e.visual.set_shape(ShapeType::Rectangle);
-  e.visual.set_size(Vector2D<double>(50, 50));
+  e.init(Vector2D<double>(150, 150), Vector2D<double>(150, 50), ShapeType::Rectangle);
 
   Scene s;
   s.init(660, 440, "test");

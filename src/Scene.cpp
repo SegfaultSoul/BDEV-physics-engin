@@ -13,6 +13,7 @@ void Scene::suspend(){
 void Scene::add_entity(Entity& entity){
   this->entity_list.push_back(entity);
   this->renderer.add_entity(&entity_list.back());
+  this->physics_engin.add_entity(&entity_list.back());
 }
 
 void Scene::run(){
