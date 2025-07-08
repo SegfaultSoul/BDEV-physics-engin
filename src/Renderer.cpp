@@ -8,6 +8,9 @@
 #include "Renderer.hpp"
 #include "Entity.hpp"
 #include "EntityVisual.hpp"
+#include "SDL_pixels.h"
+#include "SDL_rect.h"
+#include "Vector2D.hpp"
 
 void Renderer::init(int width, int height, std::string title){
   SDL_Init(SDL_INIT_VIDEO);
@@ -36,19 +39,42 @@ void Renderer::add_entity(Entity* entity){
 }
 
 //TODO: Fix
-void Renderer::render_entity(Entity entity){
-  // switch (entity) {
-  //   case ShapeType::None:
-  //     break;
-  //   case ShapeType::Rectangel:
-  //     break;
-  //   case ShapeType::Circle:
-  //     break;
-  // }
+void Renderer::render_entity(Entity* entity){
+  switch (entity->visual.get_shape()) {
+    case ShapeType::None :
+      break;
+    case ShapeType::Circle :
+      break;
+    case ShapeType::Rectangle :
+      this->render_rectangle(entity);
+      break;
+  }
+}
+
+void Renderer::render_all(){
+  for (Entity* entity : this->entity_list) {
+    this->render_entity(entity);
+  }
+}
+
+void Renderer::render_rectangle(Entity* entity){
+  Vector2D<double> pos = entity->body.get_position();
+  Vector2D<double> size = entity->visual.get_size();
+    
+  this->set_draw_color(entity->visual.get_color());
+
+  const SDL_Rect rect = {
+    static_cast<int>(std::round(pos.x - size.x / 2)), 
+    static_cast<int>(std::round(pos.y - size.y /2)), 
+    static_cast<int>(std::round(size.x)), 
+    static_cast<int>(std::round(size.y))
+  };
+
+  SDL_RenderFillRect(this->renderer, &rect);
 }
 
 void Renderer::begin_frame(){
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  this->set_draw_color({0, 0, 0, 255});
   SDL_RenderClear(renderer);
 }
 
@@ -56,3 +82,9 @@ void Renderer::end_frame(){
   SDL_RenderPresent(renderer);
   SDL_Delay(framerate_delay_ms);
 }
+
+void Renderer::set_draw_color(SDL_Color color){
+  this->color = color;
+  SDL_SetRenderDrawColor(this->renderer, color.r, color.g, color.b, color.a);
+}
+

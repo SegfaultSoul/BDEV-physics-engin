@@ -5,6 +5,6 @@
 
 class Entity {
   public:
-    PhysicsBody physics;
+    PhysicsBody body;
     EntityVisual visual;
 };

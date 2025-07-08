@@ -1,14 +1,13 @@
 #include "EntityVisual.hpp"
+#include "SDL_pixels.h"
+#include "Vector2D.hpp"
 
-void EntityVisual::set_position(Vector2D position){
-  this->position = position;
-}
-
-void EntityVisual::set_size(Vector2D size){
+// Setters
+void EntityVisual::set_size(Vector2D<double> size){
   this->size = size;
 }
 
-void EntityVisual::set_scale(Vector2D scale){
+void EntityVisual::set_scale(Vector2D<double> scale){
   this->scale = scale;
 }
 
@@ -24,4 +23,32 @@ void EntityVisual::set_radius(double radius){
   this->radius = radius;
 }
 
+void EntityVisual::set_color(SDL_Color color) {
+  this->color = color;
+}
 
+
+// getters
+Vector2D<double> EntityVisual::get_size() const {
+  return this->size;
+}
+
+Vector2D<double> EntityVisual::get_scale() const {
+  return this->scale;
+}
+
+bool EntityVisual::get_visibility() const {
+  return this->is_visible;
+}
+
+ShapeType EntityVisual::get_shape() const {
+  return this->shape;
+}
+
+double EntityVisual::get_radius() const {
+  return this->radius;
+}
+
+SDL_Color EntityVisual::get_color() const {
+  return this->color;
+}

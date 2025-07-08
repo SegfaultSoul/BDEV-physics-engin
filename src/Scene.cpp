@@ -27,7 +27,7 @@ void Scene::run(){
     }
 
     this->renderer.begin_frame();
-
+    this->renderer.render_all();
     this->renderer.end_frame();
   } 
 }
