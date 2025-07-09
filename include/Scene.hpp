@@ -19,6 +19,7 @@ class Scene {
 
     Uint32 last_time = 0;
     double dt = 0.0f;
+    double time_scale = 1.0f;
 
     void update_dt();
 
@@ -31,4 +32,5 @@ class Scene {
     void run();
 
     void set_gravity(const Vector2D<double>& gravity);
+    void set_time_scale(double time_scale);
 };

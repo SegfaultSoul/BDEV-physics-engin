@@ -37,6 +37,10 @@ void PhysicsBody::set_use_gravity(bool use_gravity) {
   this->use_gravity = use_gravity;
 }
 
+void PhysicsBody::set_impulse(const Vector2D<double>& impulse) {
+  this->impulse = impulse;
+}
+
 // getters
 Vector2D<double> PhysicsBody::get_position() const {
   return this->position;
@@ -72,4 +76,8 @@ bool PhysicsBody::get_is_static() const {
 
 bool PhysicsBody::get_use_gravity() const {
   return this->use_gravity;
+}
+
+Vector2D<double> PhysicsBody::get_impulse() const {
+  return this->impulse;
 }

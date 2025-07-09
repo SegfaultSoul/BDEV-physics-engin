@@ -19,7 +19,7 @@ void Scene::add_entity(Entity& entity){
 
 void Scene::update_dt(){
   Uint32 current_time = SDL_GetTicks();
-  this->dt = (current_time - this->last_time) / 1000.0f;
+  this->dt = ((current_time - this->last_time) / 1000.0f) * time_scale;
   this->last_time = current_time;
 }
 
@@ -46,4 +46,8 @@ void Scene::run(){
 
 void Scene::set_gravity(const Vector2D<double>& gravity) {
   this->physics_engin.set_gravity(gravity);
+}
+
+void Scene::set_time_scale(double time_scale) {
+  this->time_scale = time_scale;
 }

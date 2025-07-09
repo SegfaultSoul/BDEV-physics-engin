@@ -10,6 +10,8 @@ class PhysicsEngin{
 
     void apply_force(Entity* entity, double dt); 
     void apply_gravity(Entity* entity, double dt);
+    void apply_impulse(Entity* entity, double dt);
+    void integrate(Entity* entity, double dt);
 
 
   public:

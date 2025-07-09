@@ -8,7 +8,10 @@ class PhysicsBody {
     Vector2D<double> size = {0, 0};
     Vector2D<double> velocity = {0, 0};
     Vector2D<double> acceleration = {0, 0};
+    
+
     Vector2D<double> force = {0, 0};
+    Vector2D<double> impulse = {0, 0};
 
     double mass = 1.0f;
     double inv_mass = 1.0f;
@@ -34,6 +37,9 @@ class PhysicsBody {
 
     void set_force(const Vector2D<double>& force);
     Vector2D<double> get_force() const;
+
+    void set_impulse(const Vector2D<double>& impulse);
+    Vector2D<double> get_impulse() const;
 
     void set_mass(double mass);
     double get_mass() const;
