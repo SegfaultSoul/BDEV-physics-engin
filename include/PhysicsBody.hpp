@@ -6,14 +6,15 @@ class PhysicsBody {
   protected:
     Vector2D<double> position = {0, 0};
     Vector2D<double> size = {0, 0};
-    Vector2D<double> velocity;
-    Vector2D<double> acceleration;
-    Vector2D<double> force;
+    Vector2D<double> velocity = {0, 0};
+    Vector2D<double> acceleration = {0, 0};
+    Vector2D<double> force = {0, 0};
 
     double mass = 1.0f;
     double inv_mass = 1.0f;
 
     bool is_static = false;
+    bool use_gravity = true;
 
     // void apply_force(const Vector2D& force);
     // void update(float dt);
@@ -40,5 +41,7 @@ class PhysicsBody {
 
     void set_is_static(bool is_static);
     bool get_is_static() const;
-
+    
+    void set_use_gravity(bool use_gravity);
+    bool get_use_gravity() const;
 };

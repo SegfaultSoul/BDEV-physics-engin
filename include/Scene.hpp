@@ -4,6 +4,8 @@
 #include "PhysicsEngin.hpp"
 #include "Renderer.hpp"
 #include "SDL_events.h"
+#include "SDL_stdinc.h"
+#include "Vector2D.hpp"
 #include <vector>
 
 class Scene {
@@ -15,6 +17,11 @@ class Scene {
 
     SDL_Event event;
 
+    Uint32 last_time = 0;
+    double dt = 0.0f;
+
+    void update_dt();
+
   public:
     void init(int width, int height, std::string title);
     void suspend();
@@ -22,4 +29,6 @@ class Scene {
     void add_entity(Entity& entity);
     
     void run();
+
+    void set_gravity(const Vector2D<double>& gravity);
 };

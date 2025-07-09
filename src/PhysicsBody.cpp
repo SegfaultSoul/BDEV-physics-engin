@@ -33,6 +33,9 @@ void PhysicsBody::set_is_static(bool is_static){
   this->inv_mass = is_static ? 0.0 : (mass == 0.0 ? 0.0 : 1.0 / mass);
 }
 
+void PhysicsBody::set_use_gravity(bool use_gravity) {
+  this->use_gravity = use_gravity;
+}
 
 // getters
 Vector2D<double> PhysicsBody::get_position() const {
@@ -67,3 +70,6 @@ bool PhysicsBody::get_is_static() const {
   return this->is_static;
 }
 
+bool PhysicsBody::get_use_gravity() const {
+  return this->use_gravity;
+}

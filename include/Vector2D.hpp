@@ -28,7 +28,11 @@ class Vector2D {
       return Vector2D<T>(x / rhs.x, y / rhs.y);
     }
 
-    Vector2D<T> operator+=(const Vector2D<T>& rhs) {
+    Vector2D<T> operator*(const double scaler){
+      return Vector2D<T>(x * scaler, y * scaler);
+    }
+
+    Vector2D<T>& operator+=(const Vector2D<T>& rhs) {
       x += rhs.x;
       y += rhs.y;
       return *this;

@@ -8,6 +8,6 @@ class Entity {
     PhysicsBody body;
     EntityVisual visual;
     
-    void init(Vector2D<double> position, Vector2D<double> size, ShapeType);
+    void init(Vector2D<double> position, Vector2D<double> size, double mass, ShapeType);
 
 };
