@@ -12,6 +12,10 @@ class PhysicsEngin{
     void apply_gravity(Entity* entity, double dt);
     void apply_impulse(Entity* entity, double dt);
     void integrate(Entity* entity, double dt);
+    void clear_force(Entity* entity);
+
+    void check_collisions() const;
+    bool check_colision_AABB(Entity* entity_a, Entity* entity_b);
 
 
   public:
