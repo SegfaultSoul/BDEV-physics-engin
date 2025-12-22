@@ -19,7 +19,7 @@ void Renderer::init(int width, int height, std::string title){
   if (!window)
     std::cerr << "Error initializing window!!!" << "\n";
 
-  renderer = SDL_CreateRenderer(window, -1, 0);
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   if (!renderer)
     std::cerr << "Error initializing renderer!!!" << "\n";
@@ -52,6 +52,9 @@ void Renderer::render_entity(Entity* entity){
 }
 
 void Renderer::render_all(){
+  if (this->is_grid_rendered) {
+    this->render_grid();
+  }
   for (Entity* entity : this->entity_list) {
     this->render_entity(entity);
   }
@@ -88,3 +91,44 @@ void Renderer::set_draw_color(SDL_Color color){
   SDL_SetRenderDrawColor(this->renderer, color.r, color.g, color.b, color.a);
 }
 
+void Renderer::render_grid() {
+  this->set_draw_color({32, 32, 32, 255});
+
+  for (int x = 0; x <= this->grid_bounds.x; x+=this->grid_unit)
+    SDL_RenderDrawLine(this->renderer, this->grid_offset.x + x, this->grid_offset.y, this->grid_offset.x + x, this->grid_offset.y + this->grid_bounds.y);
+    
+  for (int y = 0; y <= this->grid_bounds.y; y+=this->grid_unit)
+    SDL_RenderDrawLine(this->renderer, this->grid_offset.x, this->grid_offset.y + y, this->grid_offset.x + this->grid_bounds.x, this->grid_offset.y + y);
+}
+
+bool Renderer::get_is_grid_rendered() const {
+  return this->is_grid_rendered;
+}
+
+void Renderer::set_is_grid_rendered(bool info) {
+  this->is_grid_rendered = info;
+}
+
+Vector2D<int> Renderer::get_grid_bounds() const {
+  return this->grid_bounds;
+}
+
+void Renderer::set_grid_bounds(const Vector2D<int>& vec) {
+  this->grid_bounds = vec;
+}
+
+void Renderer::set_grid_unit(int unit) {
+  this->grid_unit = unit; 
+}
+
+int Renderer::get_grid_unit() const {
+  return this->grid_unit; 
+}
+
+void Renderer::set_grid_offset(const Vector2D<int>& offset) {
+  this->grid_offset = offset;
+}
+
+Vector2D<int> Renderer::get_grid_offset() const {
+  return this->grid_offset;
+}

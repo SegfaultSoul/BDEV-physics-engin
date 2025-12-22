@@ -2,7 +2,6 @@
 #include "Entity.hpp"
 #include "SDL_stdinc.h"
 
-
 void Scene::init(int width, int height, std::string title){
   this->renderer.init(width, height, title);
 }
@@ -19,16 +18,19 @@ void Scene::add_entity(Entity& entity){
 
 void Scene::update_dt(){
   Uint32 current_time = SDL_GetTicks();
-  this->dt = ((current_time - this->last_time) / 1000.0f) * time_scale;
+  double frame_dt = (current_time - this->last_time) / 1000.0f;
   this->last_time = current_time;
+
+  if (frame_dt > 0.25) frame_dt = 0.25;
+
+  this->accumulator += frame_dt * this->time_scale;
 }
 
 void Scene::run(){
   this->running = true;
+  this->last_time = SDL_GetTicks();
 
   while (this->running) {
-    this->update_dt();
-
     //event handelling
     while (SDL_PollEvent(&this->event)) {
       if (this->event.type == SDL_QUIT) {
@@ -36,7 +38,11 @@ void Scene::run(){
       }
     }
 
-    this->physics_engin.update(dt);
+    this->update_dt();
+    while (this->accumulator >= this->fixed_dt) {
+      this->physics_engin.update(this->fixed_dt);
+      this->accumulator -= this->fixed_dt;
+    }
 
     this->renderer.begin_frame();
     this->renderer.render_all();
@@ -51,3 +57,13 @@ void Scene::set_gravity(const Vector2D<double>& gravity) {
 void Scene::set_time_scale(double time_scale) {
   this->time_scale = time_scale;
 }
+
+void Scene::set_simulation_boundry_criteria(const Vector2D<int>& boundry, const Vector2D<int>& offset, int unit) {
+  physics_engin.set_boundry(boundry);
+  physics_engin.set_bounds_offset(offset);
+
+  renderer.set_grid_bounds(boundry);
+  renderer.set_grid_offset(offset);
+  renderer.set_grid_unit(unit);
+}
+

@@ -18,7 +18,8 @@ class Scene {
     SDL_Event event;
 
     Uint32 last_time = 0;
-    double dt = 0.0f;
+    double fixed_dt = 1.0 / 60.0; // 60 Hz physics
+    double accumulator = 0.0;
     double time_scale = 1.0f;
 
     void update_dt();
@@ -26,11 +27,13 @@ class Scene {
   public:
     void init(int width, int height, std::string title);
     void suspend();
-
+    
     void add_entity(Entity& entity);
     
     void run();
 
     void set_gravity(const Vector2D<double>& gravity);
     void set_time_scale(double time_scale);
+    
+    void set_simulation_boundry_criteria(const Vector2D<int>& boundry, const Vector2D<int>& offset, int unit);
 };

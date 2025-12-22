@@ -1,21 +1,26 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "PhysicsBody.hpp"
 #include "Vector2D.hpp"
 #include <vector>
 class PhysicsEngin{
   protected:
     std::vector<Entity*> entity_list = {};
-    Vector2D<double> gravity = {0, 9.8f};
+    Vector2D<double> gravity = {0, 980.0f};
 
-    void apply_force(Entity* entity, double dt); 
-    void apply_gravity(Entity* entity, double dt);
-    void apply_impulse(Entity* entity, double dt);
-    void integrate(Entity* entity, double dt);
-    void clear_force(Entity* entity);
+    Vector2D<int> bounds_offset = {0 ,0};
+    int height = 0;
+    int width = 0;
 
-    void check_collisions() const;
-    bool check_colision_AABB(Entity* entity_a, Entity* entity_b);
+    void apply_force(PhysicsBody* entity_body); 
+    void apply_gravity(PhysicsBody* entity_body);
+    void apply_impulse(PhysicsBody* entity_body);
+    void integrate_forces(PhysicsBody* entity_body, double dt);
+    void integrate_velocity(PhysicsBody* entity_body, double dt);
+    void clear_force(PhysicsBody* entity_body);
+
+    void resolve_boundry_collisions(PhysicsBody* entity_body) const;
 
 
   public:
@@ -25,4 +30,12 @@ class PhysicsEngin{
 
     void set_gravity(const Vector2D<double>& gravity);
     Vector2D<double> get_gravity() const;
+
+    void set_boundry (const Vector2D<int>& dim);
+    Vector2D<int> get_boundry() const;
+    int get_height() const;
+    int get_width() const;
+
+    Vector2D<int> get_bounds_offset() const;
+    void set_bounds_offset(const Vector2D<int>& offset);
 };
