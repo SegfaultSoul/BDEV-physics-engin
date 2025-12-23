@@ -16,6 +16,8 @@ class PhysicsBody {
     double mass = 1.0f;
     double inv_mass = 1.0f;
 
+    double restitution = 1;
+
     bool is_static = false;
     bool use_gravity = true;
 
@@ -50,4 +52,7 @@ class PhysicsBody {
     
     void set_use_gravity(bool use_gravity);
     bool get_use_gravity() const;
+
+    void set_restitution(double restitution);
+    double get_restitution() const;
 };

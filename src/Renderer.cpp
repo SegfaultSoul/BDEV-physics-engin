@@ -72,7 +72,6 @@ void Renderer::render_rectangle(Entity* entity){
     static_cast<int>(std::round(size.x)), 
     static_cast<int>(std::round(size.y))
   };
-
   SDL_RenderFillRect(this->renderer, &rect);
 }
 

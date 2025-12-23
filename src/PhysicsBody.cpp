@@ -41,6 +41,10 @@ void PhysicsBody::set_impulse(const Vector2D<double>& impulse) {
   this->impulse = impulse;
 }
 
+void PhysicsBody::set_restitution(double restitution) {
+  this->restitution = restitution;
+}
+
 // getters
 Vector2D<double> PhysicsBody::get_position() const {
   return this->position;
@@ -80,4 +84,9 @@ bool PhysicsBody::get_use_gravity() const {
 
 Vector2D<double> PhysicsBody::get_impulse() const {
   return this->impulse;
+}
+
+
+double PhysicsBody::get_restitution() const {
+  return this->restitution;
 }

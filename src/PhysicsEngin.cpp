@@ -95,50 +95,45 @@ void PhysicsEngin::set_bounds_offset(const Vector2D<int>& offset) {
   this->bounds_offset = offset;
 }
 
-void PhysicsEngin::resolve_boundry_collisions(PhysicsBody* entity_body) const
+void PhysicsEngin::resolve_boundry_collisions(
+    PhysicsBody* entity_body
+) const
 {
-    Vector2D<double> position = entity_body->get_position();
-    Vector2D<double> velocity = entity_body->get_velocity();
+    Vector2D<double> position  = entity_body->get_position();
+    Vector2D<double> velocity  = entity_body->get_velocity();
     Vector2D<double> half_size = entity_body->get_size() * 0.5;
-
-    double left   = position.x - half_size.x;
-    double right  = position.x + half_size.x;
-    double top    = position.y - half_size.y;
-    double bottom = position.y + half_size.y; 
+    double restitution = entity_body->get_restitution();
 
     double worldLeft   = bounds_offset.x;
     double worldRight  = bounds_offset.x + width;
     double worldTop    = bounds_offset.y;
     double worldBottom = bounds_offset.y + height;
 
-    // Left wall
-    if (left < worldLeft) {
+    // --- Horizontal ---
+    if (position.x - half_size.x < worldLeft) {
         position.x = worldLeft + half_size.x;
         if (velocity.x < 0.0)
-            velocity.x = -velocity.x;
+            velocity.x = -velocity.x * restitution;
     }
-
-    // Right wall
-    else if (right > worldRight) {
+    else if (position.x + half_size.x > worldRight) {
         position.x = worldRight - half_size.x;
         if (velocity.x > 0.0)
-            velocity.x = -velocity.x;
+            velocity.x = -velocity.x * restitution;
     }
 
-    // Top wall
-    if (top < worldTop) {
+    // --- Vertical ---
+    if (position.y - half_size.y < worldTop) {
         position.y = worldTop + half_size.y;
         if (velocity.y < 0.0)
-            velocity.y = -velocity.y;
+            velocity.y = -velocity.y * restitution;
     }
-
-    // Bottom wall
-    else if (bottom > worldBottom) {
+    else if (position.y + half_size.y > worldBottom) {
         position.y = worldBottom - half_size.y;
         if (velocity.y > 0.0)
-            velocity.y = -velocity.y;
+            velocity.y = -velocity.y * restitution;
     }
 
     entity_body->set_position(position);
     entity_body->set_velocity(velocity);
 }
+
