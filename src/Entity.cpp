@@ -9,7 +9,7 @@ void Entity::init(int id, std::string name, Vector2D<double> position, Vector2D<
   this->body.set_size(size);
   this->body.set_restitution(restitution);
   this->visual.set_size(size);
-  this->visual.set_shape(shape);
+  this->set_shape(shape);
 }
 
 // setters
@@ -28,4 +28,20 @@ int Entity::get_id() const {
 
 std::string Entity::get_string() const {
   return this->name;
+}
+
+ShapeType Entity::get_shape() const {
+  return this->shape;
+}
+
+void Entity::set_shape(ShapeType shape){
+  this->shape = shape;
+}
+
+PhysicsBody* Entity::get_body() {
+  return &this->body;
+}
+
+EntityVisual* Entity::get_visual() {
+  return &this->visual;
 }

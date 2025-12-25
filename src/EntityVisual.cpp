@@ -15,10 +15,6 @@ void EntityVisual::set_visibility(bool is_visible){
   this->is_visible = is_visible;
 }
 
-void EntityVisual::set_shape(ShapeType shape){
-  this->shape = shape;
-}
-
 void EntityVisual::set_radius(double radius){
   this->radius = radius;
 }
@@ -39,10 +35,6 @@ Vector2D<double> EntityVisual::get_scale() const {
 
 bool EntityVisual::get_visibility() const {
   return this->is_visible;
-}
-
-ShapeType EntityVisual::get_shape() const {
-  return this->shape;
 }
 
 double EntityVisual::get_radius() const {

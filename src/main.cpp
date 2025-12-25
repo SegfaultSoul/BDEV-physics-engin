@@ -13,10 +13,10 @@ int main(){
       Vector2D<double>(50, 50), 
       1.0f,
       ShapeType::Rectangle,
-      0.8);
+      0.98);
 
-  e.body.set_use_gravity(true);
-  e.body.set_impulse(Vector2D<double>(10.0f, 10.0f)); //(6500.0f, -5000.0f)
+  e.get_body()->set_use_gravity(false);
+  e.get_body()->set_impulse(Vector2D<double>(1000.0f, 1000.0f)); //(6500.0f, -5000.0f)
   
   Scene s;
   s.init(1200, 600, "test");

@@ -9,7 +9,7 @@ void PhysicsEngin::add_entity(Entity* entity){
 
 void PhysicsEngin::update(double dt){
   for (Entity* entity : entity_list) {
-    PhysicsBody* entity_body = &entity->body;
+    PhysicsBody* entity_body = entity->get_body();
     if (entity_body->get_is_static()) continue;
 
     this->clear_force(entity_body);
@@ -95,10 +95,7 @@ void PhysicsEngin::set_bounds_offset(const Vector2D<int>& offset) {
   this->bounds_offset = offset;
 }
 
-void PhysicsEngin::resolve_boundry_collisions(
-    PhysicsBody* entity_body
-) const
-{
+void PhysicsEngin::resolve_boundry_collisions(PhysicsBody* entity_body) const {
     Vector2D<double> position  = entity_body->get_position();
     Vector2D<double> velocity  = entity_body->get_velocity();
     Vector2D<double> half_size = entity_body->get_size() * 0.5;

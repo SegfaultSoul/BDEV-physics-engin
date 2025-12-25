@@ -4,12 +4,6 @@
 #include "Vector2D.hpp"
 #include <numbers>
 
-enum class ShapeType {
-  None,
-  Rectangle,
-  Circle
-};
-
 class EntityVisual {
   protected:
     Vector2D<double> scale = {1.0f, 1.0f};
@@ -17,7 +11,6 @@ class EntityVisual {
 
     bool is_visible = true;
 
-    ShapeType shape = ShapeType::None;
     double radius = std::numbers::pi;
 
     SDL_Color color = {255, 255, 255, 255};
@@ -31,9 +24,6 @@ class EntityVisual {
 
     void set_visibility(bool is_visible);
     bool get_visibility() const;
-
-    void set_shape(ShapeType shape);
-    ShapeType get_shape() const;
 
     void set_radius(double radius);
     double get_radius() const;

@@ -40,7 +40,7 @@ void Renderer::add_entity(Entity* entity){
 
 //TODO: Fix
 void Renderer::render_entity(Entity* entity){
-  switch (entity->visual.get_shape()) {
+  switch (entity->get_shape()) {
     case ShapeType::None :
       break;
     case ShapeType::Circle :
@@ -61,10 +61,10 @@ void Renderer::render_all(){
 }
 
 void Renderer::render_rectangle(Entity* entity){
-  Vector2D<double> pos = entity->body.get_position();
-  Vector2D<double> size = entity->visual.get_size();
+  Vector2D<double> pos = entity->get_body()->get_position();
+  Vector2D<double> size = entity->get_visual()->get_size();
     
-  this->set_draw_color(entity->visual.get_color());
+  this->set_draw_color(entity->get_visual()->get_color());
 
   const SDL_Rect rect = {
     static_cast<int>(std::round(pos.x - size.x / 2)), 
