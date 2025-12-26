@@ -6,6 +6,7 @@ class PhysicsBody {
   protected:
     Vector2D<double> position = {0, 0};
     Vector2D<double> size = {0, 0};
+    double radius = 0.0;
     Vector2D<double> velocity = {0, 0};
     Vector2D<double> acceleration = {0, 0};
     
@@ -31,6 +32,9 @@ class PhysicsBody {
     void set_size(const Vector2D<double>& size);
     Vector2D<double> get_size() const;
 
+    void set_radius(double radius);
+    double get_radius() const;
+    
     void set_velocity(const Vector2D<double>& velocity);
     Vector2D<double> get_velocity() const;
 

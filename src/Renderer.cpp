@@ -12,10 +12,12 @@
 #include "SDL_rect.h"
 #include "Vector2D.hpp"
 
+
 void Renderer::init(int width, int height, std::string title){
+
   SDL_Init(SDL_INIT_VIDEO);
   window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
-
+  this->window_size = {width, height};
   if (!window)
     std::cerr << "Error initializing window!!!" << "\n";
 
@@ -44,6 +46,7 @@ void Renderer::render_entity(Entity* entity){
     case ShapeType::None :
       break;
     case ShapeType::Circle :
+      this->render_circle(entity);
       break;
     case ShapeType::Rectangle :
       this->render_rectangle(entity);
@@ -62,7 +65,7 @@ void Renderer::render_all(){
 
 void Renderer::render_rectangle(Entity* entity){
   Vector2D<double> pos = entity->get_body()->get_position();
-  Vector2D<double> size = entity->get_visual()->get_size();
+  Vector2D<double> size = entity->get_visual()->get_size() * entity->get_visual()->get_scale();
     
   this->set_draw_color(entity->get_visual()->get_color());
 
@@ -73,6 +76,37 @@ void Renderer::render_rectangle(Entity* entity){
     static_cast<int>(std::round(size.y))
   };
   SDL_RenderFillRect(this->renderer, &rect);
+}
+
+void Renderer::render_circle(Entity* entity) {
+    Vector2D<double> pos = entity->get_body()->get_position();
+    double radius = entity->get_visual()->get_radius() / 2.0;
+
+    this->set_draw_color(entity->get_visual()->get_color());
+
+    int centerX = static_cast<int>(std::round(pos.x));
+    int centerY = static_cast<int>(std::round(pos.y));
+    int r = static_cast<int>(std::round(radius));
+
+    int x = 0;
+    int y = r;
+    int d = 3 - 2 * r;
+
+    while (y >= x) {
+        // Draw horizontal lines between the mirrored points to fill the circle
+        SDL_RenderDrawLine(this->renderer, centerX - x, centerY + y, centerX + x, centerY + y);
+        SDL_RenderDrawLine(this->renderer, centerX - x, centerY - y, centerX + x, centerY - y);
+        SDL_RenderDrawLine(this->renderer, centerX - y, centerY + x, centerX + y, centerY + x);
+        SDL_RenderDrawLine(this->renderer, centerX - y, centerY - x, centerX + y, centerY - x);
+
+        if (d < 0) {
+            d = d + 4 * x + 6;
+        } else {
+            d = d + 4 * (x - y) + 10;
+            y--;
+        }
+        x++;
+    }
 }
 
 void Renderer::begin_frame(){
@@ -130,4 +164,8 @@ void Renderer::set_grid_offset(const Vector2D<int>& offset) {
 
 Vector2D<int> Renderer::get_grid_offset() const {
   return this->grid_offset;
+}
+
+Vector2D<int> Renderer::get_window_size() const {
+  return this->window_size;
 }

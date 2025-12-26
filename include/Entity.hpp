@@ -23,7 +23,7 @@ class Entity {
   public:
     
 
-    void init(int id, std::string name, Vector2D<double> position, Vector2D<double> size, double mass, ShapeType shape, double restitution);
+    void init(int id, std::string name, Vector2D<double> position, Vector2D<double> size, double radius, double mass, ShapeType shape, double restitution);
     
     void set_id(int id);
     int get_id() const;

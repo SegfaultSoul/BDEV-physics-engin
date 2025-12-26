@@ -86,7 +86,14 @@ Vector2D<double> PhysicsBody::get_impulse() const {
   return this->impulse;
 }
 
-
 double PhysicsBody::get_restitution() const {
   return this->restitution;
+}
+
+double PhysicsBody::get_radius() const {
+  return this->radius;
+}
+
+void PhysicsBody::set_radius(double radius){
+  this->radius = radius;
 }

@@ -35,5 +35,5 @@ class Scene {
     void set_gravity(const Vector2D<double>& gravity);
     void set_time_scale(double time_scale);
     
-    void set_simulation_boundry_criteria(const Vector2D<int>& boundry, const Vector2D<int>& offset, int unit);
+    void set_simulation_boundry_criteria(const Vector2D<int>& boundry, int unit);
 };

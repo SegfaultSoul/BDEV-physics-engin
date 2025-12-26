@@ -1,13 +1,15 @@
 #include "Entity.hpp"
 #include "EntityVisual.hpp"
 
-void Entity::init(int id, std::string name, Vector2D<double> position, Vector2D<double> size, double mass, ShapeType shape, double restitution){
+void Entity::init(int id, std::string name, Vector2D<double> position, Vector2D<double> size, double radius, double mass, ShapeType shape, double restitution){
   this->set_id(id);
   this->set_name(name);
   this->body.set_position(position);
   this->body.set_mass(mass);
   this->body.set_size(size);
   this->body.set_restitution(restitution);
+  this->body.set_radius(radius);
+  this->visual.set_radius(radius);
   this->visual.set_size(size);
   this->set_shape(shape);
 }

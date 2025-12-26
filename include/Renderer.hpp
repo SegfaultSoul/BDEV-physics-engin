@@ -19,13 +19,14 @@ class Renderer{
     int framerate_delay_ms = 16;
 
     std::vector<Entity*> entity_list = {};
+    Vector2D<int> window_size = {0, 0};
     Vector2D<int> grid_bounds = {0, 0};
     Vector2D<int> grid_offset = {0, 0};
     int grid_unit = 10;
     SDL_Color color;
 
     void render_rectangle(Entity* entity);
-    void render_circle();
+    void render_circle(Entity* entity);
     void render_grid();
 
 
@@ -54,4 +55,6 @@ class Renderer{
     
     void set_grid_offset(const Vector2D<int>& offset);
     Vector2D<int> get_grid_offset() const;
+
+    Vector2D<int> get_window_size() const;
 };

@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 #include "Entity.hpp"
 #include "SDL_stdinc.h"
+#include "Vector2D.hpp"
 
 void Scene::init(int width, int height, std::string title){
   this->renderer.init(width, height, title);
@@ -58,12 +59,15 @@ void Scene::set_time_scale(double time_scale) {
   this->time_scale = time_scale;
 }
 
-void Scene::set_simulation_boundry_criteria(const Vector2D<int>& boundry, const Vector2D<int>& offset, int unit) {
+void Scene::set_simulation_boundry_criteria(const Vector2D<int>& boundry, int unit) {
   physics_engin.set_boundry(boundry);
-  physics_engin.set_bounds_offset(offset);
-
   renderer.set_grid_bounds(boundry);
-  renderer.set_grid_offset(offset);
+
   renderer.set_grid_unit(unit);
+
+  Vector2D<int> offset = (renderer.get_window_size() - boundry) / 2;
+
+  physics_engin.set_bounds_offset(offset);
+  renderer.set_grid_offset(offset);
 }
 
