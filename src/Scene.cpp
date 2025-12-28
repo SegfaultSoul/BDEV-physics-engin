@@ -3,8 +3,9 @@
 #include "SDL_stdinc.h"
 #include "Vector2D.hpp"
 
-void Scene::init(int width, int height, std::string title){
+void Scene::init(int width, int height, std::string title, bool render_grid){
   this->renderer.init(width, height, title);
+  this->renderer.set_is_grid_rendered(render_grid);
 }
 
 void Scene::suspend(){

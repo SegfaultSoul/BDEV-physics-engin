@@ -20,7 +20,7 @@ class PhysicsEngin{
     void integrate_velocity(PhysicsBody* entity_body, double dt);
     void clear_force(PhysicsBody* entity_body);
 
-    void resolve_boundry_collisions(PhysicsBody* entity_body) const;
+    void resolve_boundry_collisions(Entity* entity) const;
 
 
   public:

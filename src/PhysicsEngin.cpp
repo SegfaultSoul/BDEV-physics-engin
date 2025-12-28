@@ -21,7 +21,7 @@ void PhysicsEngin::update(double dt){
     this->integrate_forces(entity_body, dt);
     this->integrate_velocity(entity_body, dt);
   
-    this->resolve_boundry_collisions(entity_body);
+    this->resolve_boundry_collisions(entity);
   }
 }
 
@@ -95,11 +95,20 @@ void PhysicsEngin::set_bounds_offset(const Vector2D<int>& offset) {
   this->bounds_offset = offset;
 }
 
-void PhysicsEngin::resolve_boundry_collisions(PhysicsBody* entity_body) const {
-    Vector2D<double> position  = entity_body->get_position();
-    Vector2D<double> velocity  = entity_body->get_velocity();
-    Vector2D<double> half_size = entity_body->get_size() * 0.5;
-    double restitution = entity_body->get_restitution();
+void PhysicsEngin::resolve_boundry_collisions(Entity* entity) const {
+    Vector2D<double> position  = entity->get_body()->get_position();
+    Vector2D<double> velocity  = entity->get_body()->get_velocity();
+    Vector2D<double> half_size;
+    if (entity->get_shape() == ShapeType::Rectangle) {
+      half_size = entity->get_body()->get_size() * 0.5;
+    }
+
+    if (entity->get_shape() == ShapeType::Circle) {
+      double radius = entity->get_body()->get_radius();
+      half_size = {radius, radius};
+    }
+    
+    double restitution = entity->get_body()->get_restitution();
 
     double worldLeft   = bounds_offset.x;
     double worldRight  = bounds_offset.x + width;
@@ -130,7 +139,7 @@ void PhysicsEngin::resolve_boundry_collisions(PhysicsBody* entity_body) const {
             velocity.y = -velocity.y * restitution;
     }
 
-    entity_body->set_position(position);
-    entity_body->set_velocity(velocity);
+    entity->get_body()->set_position(position);
+    entity->get_body()->set_velocity(velocity);
 }
 

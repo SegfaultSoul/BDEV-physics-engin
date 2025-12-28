@@ -20,6 +20,10 @@ class Vector2D {
     Vector2D<T> operator-(const Vector2D<T>& rhs) const {
       return Vector2D<T>(x - rhs.x, y - rhs.y);
     }
+    
+    Vector2D<T> operator*(const Vector2D<T>& rhs) const {
+      return Vector2D<T>(x * rhs.x, y * rhs.y);
+    }
 
     Vector2D<T> operator*(const double scaler){
       return Vector2D<T>(x * scaler, y * scaler);

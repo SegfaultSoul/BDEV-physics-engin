@@ -25,7 +25,7 @@ class Scene {
     void update_dt();
 
   public:
-    void init(int width, int height, std::string title);
+    void init(int width, int height, std::string title, bool render_grid);
     void suspend();
     
     void add_entity(Entity& entity);

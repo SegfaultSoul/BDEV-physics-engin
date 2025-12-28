@@ -33,14 +33,10 @@ void Renderer::suspend(){
   SDL_Quit();
 }
 
-// void Renderer::run(){
-//     // }
-
 void Renderer::add_entity(Entity* entity){
   entity_list.push_back(entity);
 }
 
-//TODO: Fix
 void Renderer::render_entity(Entity* entity){
   switch (entity->get_shape()) {
     case ShapeType::None :
@@ -55,9 +51,7 @@ void Renderer::render_entity(Entity* entity){
 }
 
 void Renderer::render_all(){
-  if (this->is_grid_rendered) {
-    this->render_grid();
-  }
+  this->render_grid();
   for (Entity* entity : this->entity_list) {
     this->render_entity(entity);
   }
@@ -80,7 +74,7 @@ void Renderer::render_rectangle(Entity* entity){
 
 void Renderer::render_circle(Entity* entity) {
     Vector2D<double> pos = entity->get_body()->get_position();
-    double radius = entity->get_visual()->get_radius() / 2.0;
+    double radius = entity->get_visual()->get_radius();
 
     this->set_draw_color(entity->get_visual()->get_color());
 
@@ -127,11 +121,27 @@ void Renderer::set_draw_color(SDL_Color color){
 void Renderer::render_grid() {
   this->set_draw_color({32, 32, 32, 255});
 
-  for (int x = 0; x <= this->grid_bounds.x; x+=this->grid_unit)
-    SDL_RenderDrawLine(this->renderer, this->grid_offset.x + x, this->grid_offset.y, this->grid_offset.x + x, this->grid_offset.y + this->grid_bounds.y);
+  for (int x = 0; x <= this->grid_bounds.x; x+=this->grid_unit){
+    //skip to last line
+    if(!this->get_is_grid_rendered() && x > 0) x = this->grid_bounds.x;
+    SDL_RenderDrawLine(
+      this->renderer, 
+      this->grid_offset.x + x, 
+      this->grid_offset.y, 
+      this->grid_offset.x + x, 
+      this->grid_offset.y + this->grid_bounds.y);
+  }
     
-  for (int y = 0; y <= this->grid_bounds.y; y+=this->grid_unit)
-    SDL_RenderDrawLine(this->renderer, this->grid_offset.x, this->grid_offset.y + y, this->grid_offset.x + this->grid_bounds.x, this->grid_offset.y + y);
+  for (int y = 0; y <= this->grid_bounds.y; y+=this->grid_unit){
+    //skip to last line
+    if(!this->get_is_grid_rendered() && y > 0) y = this->grid_bounds.y;
+    SDL_RenderDrawLine(
+      this->renderer, 
+      this->grid_offset.x, 
+      this->grid_offset.y + y, 
+      this->grid_offset.x + this->grid_bounds.x, 
+      this->grid_offset.y + y);
+  }
 }
 
 bool Renderer::get_is_grid_rendered() const {
