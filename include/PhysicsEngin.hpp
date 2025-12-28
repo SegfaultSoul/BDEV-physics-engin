@@ -22,6 +22,15 @@ class PhysicsEngin{
 
     void resolve_boundry_collisions(Entity* entity) const;
 
+    bool sat_collision_check(PhysicsBody* entity_1, PhysicsBody* entity_2);
+    void _sat_porjection_check(
+      std::vector<Vector2D<double>>& points_1,
+      std::vector<Vector2D<double>>& points_2,
+      Vector2D<double>& axis,
+      bool& is_colliding,
+      double& min_overlap,
+      Vector2D<double>& collision_normal) const;
+
 
   public:
     void add_entity(Entity* entity);

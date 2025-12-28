@@ -1,5 +1,6 @@
 #include "PhysicsBody.hpp"
 #include "Vector2D.hpp"
+#include <vector>
 
 
 // setters
@@ -96,4 +97,27 @@ double PhysicsBody::get_radius() const {
 
 void PhysicsBody::set_radius(double radius){
   this->radius = radius;
+}
+
+std::vector<Vector2D<double>> PhysicsBody::get_points() const {
+  Vector2D<double> pos = this->get_position();
+  Vector2D<double> hs = this->get_size() / 2;
+
+  std::vector<Vector2D<double>> output {};
+
+  output.push_back(Vector2D<double>(pos.x - hs.x ,pos.y - hs.y));
+  output.push_back(Vector2D<double>(pos.x + hs.x ,pos.y - hs.y));
+  output.push_back(Vector2D<double>(pos.x + hs.x ,pos.y + hs.y));
+  output.push_back(Vector2D<double>(pos.x - hs.x ,pos.y + hs.y));
+
+  return output;
+}
+
+std::vector<Vector2D<double>> PhysicsBody::get_edges() const {
+  std::vector<Vector2D<double>> points = this->get_points();
+  std::vector<Vector2D<double>> output {};
+  
+  for(int i = 0; i < points.size() - 1; i++) output.push_back(points[i+1] - points[i]);
+  
+  return output;
 }

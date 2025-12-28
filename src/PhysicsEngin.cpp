@@ -2,6 +2,9 @@
 #include "Entity.hpp"
 #include "PhysicsBody.hpp"
 #include "Vector2D.hpp"
+#include <algorithm>
+#include <cmath>
+#include <vector>
 
 void PhysicsEngin::add_entity(Entity* entity){
   this->entity_list.push_back(entity);
@@ -141,5 +144,75 @@ void PhysicsEngin::resolve_boundry_collisions(Entity* entity) const {
 
     entity->get_body()->set_position(position);
     entity->get_body()->set_velocity(velocity);
+}
+
+//TODO: Add the actual entity collision check in the update
+bool PhysicsEngin::sat_collision_check(PhysicsBody* entity_1, PhysicsBody* entity_2) {
+  bool is_colliding = true;
+
+  double min_overlap = INFINITY;
+  Vector2D<double> collision_normal {};
+
+  std::vector<Vector2D<double>> points_1 = entity_1->get_points();
+  std::vector<Vector2D<double>> points_2 = entity_2->get_points();
+  
+  //get the edges of both entities 
+  std::vector<Vector2D<double>> unit_axis = entity_1->get_edges();
+  std::vector<Vector2D<double>> edges_ = entity_2->get_edges();
+
+  //combine the edges 
+  unit_axis.reserve(unit_axis.size() + edges_.size());
+  unit_axis.insert(unit_axis.end(), edges_.begin(), edges_.end());
+  edges_.clear();
+
+  //get the unit axis via perpendicular of the edge divided by its magnitude
+  for(Vector2D<double>& vec: unit_axis) {
+    vec = vec.perpendicular();
+    vec = vec / vec.magnitude();
+  }
+
+  for(Vector2D<double>& axis: unit_axis){
+    if(!is_colliding) break;
+    this->_sat_porjection_check(
+      points_1,
+      points_2,
+      axis,
+      is_colliding,
+      min_overlap,
+      collision_normal);
+  }
+  
+  
+  return is_colliding;
+}
+
+void PhysicsEngin::_sat_porjection_check(
+  std::vector<Vector2D<double>>& points_1,
+  std::vector<Vector2D<double>>& points_2,
+  Vector2D<double>& axis,
+  bool& is_colliding,
+  double& min_overlap,
+  Vector2D<double>& collision_normal) const {
+  double max_a = -INFINITY, min_a = INFINITY, max_b = -INFINITY, min_b = INFINITY;
+  
+  for (Vector2D<double>& point : points_1) {
+    double proj = point.dot(axis);
+    if (min_a > proj) min_a = proj;
+    if (max_a < proj) max_a = proj;
+  }
+
+  for (Vector2D<double>& point : points_2) {
+    double proj = point.dot(axis);
+    if (min_b > proj) min_b = proj;
+    if (max_b < proj) max_b = proj;
+  }
+
+  if(max_a < min_b || max_b < min_a) is_colliding = false;
+  
+  double overlap = std::min(max_a, max_b) - std::max(min_a, min_b);
+  if (overlap < min_overlap) {
+    min_overlap = overlap;
+    collision_normal = axis;  
+  }
 }
 

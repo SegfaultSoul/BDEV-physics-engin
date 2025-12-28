@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector2D.hpp"
+#include <vector>
 
 class PhysicsBody {
   protected:
@@ -59,4 +60,7 @@ class PhysicsBody {
 
     void set_restitution(double restitution);
     double get_restitution() const;
+
+    std::vector<Vector2D<double>> get_points() const;
+    std::vector<Vector2D<double>> get_edges() const;
 };
