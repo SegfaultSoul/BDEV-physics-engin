@@ -4,6 +4,8 @@
 #include "Vector2D.hpp"
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
+#include <optional>
 #include <vector>
 
 void PhysicsEngin::add_entity(Entity* entity){
@@ -22,8 +24,17 @@ void PhysicsEngin::update(double dt){
     this->apply_impulse(entity_body);
 
     this->integrate_forces(entity_body, dt);
-    this->integrate_velocity(entity_body, dt);
+  }
   
+  std::vector<CollisionPair> colliding_pairs = broad_phase(entity_list);
+
+  std::vector<ResolutionPair> resolution_pairs = narrow_phase(colliding_pairs);
+
+  for (Entity* entity: entity_list) {
+    PhysicsBody* entity_body = entity->get_body();
+    if (entity_body->get_is_static()) continue;
+  
+    this->integrate_velocity(entity_body, dt);
     this->resolve_boundry_collisions(entity);
   }
 }
@@ -146,9 +157,21 @@ void PhysicsEngin::resolve_boundry_collisions(Entity* entity) const {
     entity->get_body()->set_velocity(velocity);
 }
 
+std::vector<ResolutionPair> PhysicsEngin::narrow_phase(std::vector<CollisionPair>& colliding_pairs) {
+  std::vector<ResolutionPair> resolution_pairs;
+
+  for (CollisionPair& cp: colliding_pairs) {
+    if (std::optional<ResolutionPair> rp = sat_collision_check(cp)) {
+      resolution_pairs.emplace_back(std::move(*rp));
+    }
+  }
+
+  return resolution_pairs;
+}
+
 //TODO: Add the actual entity collision check in the update
-bool PhysicsEngin::sat_collision_check(PhysicsBody* entity_1, PhysicsBody* entity_2) {
-  bool is_colliding = true;
+std::optional<ResolutionPair> PhysicsEngin::sat_collision_check(CollisionPair& pair) {
+  PhysicsBody *entity_1 = pair.entity_1->get_body(), *entity_2 = pair.entity_2->get_body();
 
   double min_overlap = INFINITY;
   Vector2D<double> collision_normal {};
@@ -163,30 +186,37 @@ bool PhysicsEngin::sat_collision_check(PhysicsBody* entity_1, PhysicsBody* entit
   //combine the edges 
   unit_axis.reserve(unit_axis.size() + edges_.size());
   unit_axis.insert(unit_axis.end(), edges_.begin(), edges_.end());
-  edges_.clear();
 
   //get the unit axis via perpendicular of the edge divided by its magnitude
   for(Vector2D<double>& vec: unit_axis) {
     vec = vec.perpendicular();
+    if (vec.magnitude() == 0.0) continue;
     vec = vec / vec.magnitude();
   }
 
   for(Vector2D<double>& axis: unit_axis){
-    if(!is_colliding) break;
-    this->_sat_porjection_check(
+    bool is_colliding = true;
+    
+    this->_sat_projection_check(
       points_1,
       points_2,
       axis,
       is_colliding,
       min_overlap,
       collision_normal);
+    
+    if(!is_colliding) return std::nullopt;
   }
   
+  Vector2D<double> center_dir = entity_2->get_position() - entity_1->get_position();
+  if (center_dir.dot(collision_normal) < 0) {
+    collision_normal = -collision_normal;
+  }
   
-  return is_colliding;
+  return ResolutionPair(pair, collision_normal, min_overlap);
 }
 
-void PhysicsEngin::_sat_porjection_check(
+void PhysicsEngin::_sat_projection_check(
   std::vector<Vector2D<double>>& points_1,
   std::vector<Vector2D<double>>& points_2,
   Vector2D<double>& axis,
@@ -207,7 +237,10 @@ void PhysicsEngin::_sat_porjection_check(
     if (max_b < proj) max_b = proj;
   }
 
-  if(max_a < min_b || max_b < min_a) is_colliding = false;
+  if(max_a < min_b || max_b < min_a) {
+    is_colliding = false;
+    return;
+  }
   
   double overlap = std::min(max_a, max_b) - std::max(min_a, min_b);
   if (overlap < min_overlap) {
@@ -216,3 +249,57 @@ void PhysicsEngin::_sat_porjection_check(
   }
 }
 
+AABB<double> PhysicsEngin::_compute_AABB(Entity* entity) const {
+  AABB<double> output;
+  output.entity = entity;
+  std::vector<Vector2D<double>> points = entity->get_body()->get_points();
+  output.max = output.max = points[0];
+
+  for(const Vector2D<double>& point: points) {
+    output.min.x = std::min(output.min.x, point.x);
+    output.min.y = std::min(output.min.y, point.y);
+    output.max.x = std::max(output.max.x, point.x);
+    output.max.y = std::max(output.max.y, point.y);
+  }
+  return output;
+}
+
+bool PhysicsEngin::_check_AABB(
+  const AABB<double>& entity_1, 
+  const AABB<double>& entity_2) const {
+  return !( entity_1.max.x < entity_2.min.x ||
+            entity_1.min.x > entity_2.max.x ||
+            entity_1.max.y < entity_2.min.y ||
+            entity_1.min.y > entity_2.max.y );
+}
+
+
+std::vector<CollisionPair> PhysicsEngin::broad_phase(std::vector<Entity*> entities) {
+  std::vector<CollisionPair> pairs;
+  
+  std::vector<AABB<double>> intervals;
+  intervals.reserve(entities.size());
+
+  for (Entity* e : entities) {
+    intervals.push_back(_compute_AABB(e));
+  }
+
+  std::sort(intervals.begin(), intervals.end(),
+    [](AABB<double>& entity_a, AABB<double>& entity_b){
+      return entity_a.min.x < entity_b.min.x;
+    });  
+  
+  for (std::size_t i = 0; i < intervals.size(); ++i) {
+    for (std::size_t j = i + 1; j < intervals.size(); ++j) {
+      
+      if (intervals[j].min.x > intervals[i].max.x) break;
+
+      if( intervals[j].min.y > intervals[i].max.y ||
+          intervals[j].max.y < intervals[i].min.y) continue;
+
+      pairs.emplace_back(intervals[i].entity, intervals[j].entity);
+    }
+  }
+  
+  return pairs;
+}

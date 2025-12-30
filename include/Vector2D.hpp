@@ -45,6 +45,10 @@ class Vector2D {
       return *this;
     }
 
+    Vector2D<T> operator-() const noexcept {
+      return Vector2D<T>(-x, -y);
+    }
+
     T dot(const Vector2D<T>& rhs) {
       return (this->x * rhs.x) + (this->y * rhs.y);
     }
