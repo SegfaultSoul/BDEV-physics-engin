@@ -37,7 +37,9 @@ struct ResolutionPair {
 class PhysicsEngin{
   protected:
     std::vector<Entity*> entity_list = {};
-    Vector2D<double> gravity = {0, 980.0f};
+    Vector2D<double> gravity = {0, -980.0f};
+    
+    Vector2D<double> correction_factor = {1, -1};
 
     Vector2D<int> bounds_offset = {0 ,0};
     int height = 0;
@@ -67,6 +69,8 @@ class PhysicsEngin{
     std::vector<CollisionPair> broad_phase(std::vector<Entity*> entities);
 
     std::vector<ResolutionPair> narrow_phase(std::vector<CollisionPair>& colliding_pairs);
+
+    void relove_narrow_phase(std::vector<ResolutionPair>& rps);
 
   public:
     void add_entity(Entity* entity);

@@ -17,9 +17,9 @@ int main(){
       1, 
       "box 1", 
       Vector2D<double>(0, 0), 
-      25,
+      Vector2D<double>(50, 50),
       1.0f,
-      ShapeType::Circle,
+      ShapeType::Rectangle,
       0.8);
 
   f.init(

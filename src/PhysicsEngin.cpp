@@ -13,6 +13,12 @@ void PhysicsEngin::add_entity(Entity* entity){
 }
 
 void PhysicsEngin::update(double dt){
+  std::vector<CollisionPair> colliding_pairs = broad_phase(entity_list);
+
+  std::vector<ResolutionPair> resolution_pairs = narrow_phase(colliding_pairs);
+
+  relove_narrow_phase(resolution_pairs);
+  
   for (Entity* entity : entity_list) {
     PhysicsBody* entity_body = entity->get_body();
     if (entity_body->get_is_static()) continue;
@@ -25,10 +31,6 @@ void PhysicsEngin::update(double dt){
 
     this->integrate_forces(entity_body, dt);
   }
-  
-  std::vector<CollisionPair> colliding_pairs = broad_phase(entity_list);
-
-  std::vector<ResolutionPair> resolution_pairs = narrow_phase(colliding_pairs);
 
   for (Entity* entity: entity_list) {
     PhysicsBody* entity_body = entity->get_body();
@@ -126,8 +128,8 @@ void PhysicsEngin::resolve_boundry_collisions(Entity* entity) const {
 
     double worldLeft   = bounds_offset.x;
     double worldRight  = bounds_offset.x + width;
-    double worldTop    = bounds_offset.y;
-    double worldBottom = bounds_offset.y + height;
+    double worldTop    = bounds_offset.y + height;
+    double worldBottom = bounds_offset.y;
 
     // --- Horizontal ---
     if (position.x - half_size.x < worldLeft) {
@@ -142,13 +144,13 @@ void PhysicsEngin::resolve_boundry_collisions(Entity* entity) const {
     }
 
     // --- Vertical ---
-    if (position.y - half_size.y < worldTop) {
-        position.y = worldTop + half_size.y;
+    if (position.y - half_size.y < worldBottom) {
+        position.y = worldBottom + half_size.y;
         if (velocity.y < 0.0)
             velocity.y = -velocity.y * restitution;
     }
-    else if (position.y + half_size.y > worldBottom) {
-        position.y = worldBottom - half_size.y;
+    else if (position.y + half_size.y > worldTop) {
+        position.y = worldTop - half_size.y;
         if (velocity.y > 0.0)
             velocity.y = -velocity.y * restitution;
     }
@@ -253,7 +255,7 @@ AABB<double> PhysicsEngin::_compute_AABB(Entity* entity) const {
   AABB<double> output;
   output.entity = entity;
   std::vector<Vector2D<double>> points = entity->get_body()->get_points();
-  output.max = output.max = points[0];
+  output.min = output.max = points[0];
 
   for(const Vector2D<double>& point: points) {
     output.min.x = std::min(output.min.x, point.x);
@@ -302,4 +304,39 @@ std::vector<CollisionPair> PhysicsEngin::broad_phase(std::vector<Entity*> entiti
   }
   
   return pairs;
+}
+
+void PhysicsEngin::relove_narrow_phase(std::vector<ResolutionPair>& rps) {
+  for(ResolutionPair& rp: rps) {
+    PhysicsBody* entity_1 = rp.pair.entity_1->get_body();
+    PhysicsBody* entity_2 = rp.pair.entity_2->get_body();
+
+    double inv_mass_1 = entity_1->get_inv_mass();
+    double inv_mass_2 = entity_2->get_inv_mass();
+    double total_inv_mass = inv_mass_1 + inv_mass_2;
+
+    if (total_inv_mass == 0.0) continue;
+    
+    constexpr double k_slop = 0.5f;
+    constexpr double percent = 0.8f;
+
+    double corrected_overlap = std::max(rp.overlap - k_slop, 0.0);
+
+    Vector2D<double> correction = rp.normal * (corrected_overlap / total_inv_mass) * percent;
+
+    entity_1->set_position(entity_1->get_position() - correction * inv_mass_1);
+    entity_2->set_position(entity_2->get_position() + correction * inv_mass_2);
+  
+    Vector2D<double> rel_vel = entity_2->get_velocity() - entity_1->get_velocity();
+    double normal_rel_vel = rel_vel.dot(rp.normal);
+    if (normal_rel_vel > 0.0) continue;
+
+    double e = std::min(entity_1->get_restitution(), entity_2->get_restitution());
+    double j = -(1 + e) * normal_rel_vel;
+    j /= total_inv_mass;
+
+    Vector2D<double> impulse = rp.normal * j;
+    entity_1->set_impulse(entity_1->get_impulse() - impulse);
+    entity_2->set_impulse(entity_2->get_impulse() + impulse);
+  }
 }
