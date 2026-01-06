@@ -9,7 +9,7 @@ int main(){
   Scene s;
   s.init(600, 600, "test", true);
   s.set_simulation_boundry_criteria(Vector2D<int>(550, 550), 25); 
-  s.set_gravity(Vector2D<double>(0.0f, 980.0f));
+  s.set_gravity(Vector2D<double>(0.0f, 0.0f));
   s.set_time_scale(1.0f);
   
   Entity e, f;
@@ -18,22 +18,22 @@ int main(){
       "box 1", 
       Vector2D<double>(0, 0), 
       Vector2D<double>(50, 50),
-      1.0f,
+      10.0f,
       ShapeType::Rectangle,
-      0.8);
+      1.0);
 
   f.init(
       2, 
       "box 2", 
       Vector2D<double>(500, 500), 
       Vector2D<double>(50, 50),
-      1.0f,
+      10.0f,
       ShapeType::Rectangle,
-      0.8);
+      1.0);
   
   e.get_body()->set_impulse(Vector2D<double>(1000.0f, 1000.0f)); //(6500.0f, -5000.0f)
-  f.get_body()->set_impulse(Vector2D<double>(-1000.0f, -1000.0f)); //(6500.0f, -5000.0f)
-  
+  f.get_body()->set_impulse(Vector2D<double>(-1000.0f, -10000.0f)); //(6500.0f, -5000.0f)
+  f.get_visual()->set_color({255, 0, 0, 255});
   s.add_entity(e);
   s.add_entity(f);
   s.run();

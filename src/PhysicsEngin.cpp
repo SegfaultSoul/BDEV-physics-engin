@@ -317,7 +317,7 @@ void PhysicsEngin::relove_narrow_phase(std::vector<ResolutionPair>& rps) {
 
     if (total_inv_mass == 0.0) continue;
     
-    constexpr double k_slop = 0.5f;
+    constexpr double k_slop = 1.0f;
     constexpr double percent = 0.8f;
 
     double corrected_overlap = std::max(rp.overlap - k_slop, 0.0);
